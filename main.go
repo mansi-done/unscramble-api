@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -22,8 +24,15 @@ type WordsStruct struct {
 	Words []string
 }
 
-func main() {
 
+func init() {
+    if err := godotenv.Load(); err != nil {
+        log.Print("No .env file found")
+    }
+}
+
+func main() {
+	
 	router := mux.NewRouter()
 	var st string
 
@@ -72,6 +81,11 @@ func fetchWords() []string {
 }
 
 func connectMangoDB() *mongo.Collection {
+
+	uri := os.Getenv("URI")
+    if uri == "" {
+        log.Fatal("URI not set")
+    }
 
 	ctx := context.TODO()
 	clientOptions := options.Client().ApplyURI(uri)
