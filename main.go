@@ -32,9 +32,14 @@ func init() {
 }
 
 func main() {
-	
+
 	router := mux.NewRouter()
 	var st string
+	var port string = os.Getenv("PORT")
+    if port == "" {
+        log.Fatal("PORT not set")
+    }
+
 
 	router.HandleFunc("/words", func(w http.ResponseWriter, r *http.Request) {
 
@@ -49,7 +54,7 @@ func main() {
 		fmt.Fprint(w, st)
 	})
 
-	http.ListenAndServe(":8000", router)
+	http.ListenAndServe(":"+port, router)
 
 }
 
